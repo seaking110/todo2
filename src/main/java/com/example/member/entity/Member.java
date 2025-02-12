@@ -1,9 +1,13 @@
 package com.example.member.entity;
 
 import com.example.todo.entity.BaseEntity;
+import com.example.todo.entity.Todo;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -22,6 +26,9 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Todo> todos = new ArrayList<>();
 
     public Member(Long id, String name, String email) {
         this.id = id;

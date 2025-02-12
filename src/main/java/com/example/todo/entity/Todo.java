@@ -1,11 +1,15 @@
 package com.example.todo.entity;
 
+import com.example.comment.entity.Comment;
 import com.example.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -16,7 +20,7 @@ public class Todo extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -25,6 +29,9 @@ public class Todo extends BaseEntity {
 
     @Column(columnDefinition = "longtext")
     private String content;
+
+    @OneToMany(mappedBy = "todo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     public Todo(Member member, String title, String content) {
         this.member = member;

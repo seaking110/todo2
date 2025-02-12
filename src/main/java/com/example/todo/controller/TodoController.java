@@ -60,9 +60,9 @@ public class TodoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<TodoResponseDto>> getTodos(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+    public ResponseEntity<Page<PageTodoResponseDto>> getTodos(
+            @RequestParam(required = false, defaultValue = "1") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
     ) {
         validateLogin(loginMember);

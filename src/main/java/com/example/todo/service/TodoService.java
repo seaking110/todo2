@@ -57,22 +57,16 @@ public class TodoService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
     @Transactional(readOnly = true)
-    public Page<TodoResponseDto> getTodos(int page, int size) {
+    public Page<PageTodoResponseDto> getTodos(int page, int size) {
        Pageable pageable = PageRequest.of(page-1, size, Sort.by(Sort.Order.desc("modifiedAt")));
         return todoRepository.findAll(pageable)
-                .map(todo -> new TodoResponseDto(
-                        todo.getId(),
-                        new MemberResponseDto(
-                                todo.getMember().getId(),
-                                todo.getMember().getName(),
-                                todo.getMember().getEmail(),
-                                todo.getMember().getCreatedAt(),
-                                todo.getMember().getModifiedAt()
-                        ),
+                .map(todo -> new PageTodoResponseDto(
                         todo.getTitle(),
                         todo.getContent(),
+                        todo.getComments().size(),
                         todo.getCreatedAt(),
-                        todo.getModifiedAt()
+                        todo.getModifiedAt(),
+                        todo.getMember().getName()
                 ));
     }
 
