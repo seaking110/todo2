@@ -7,6 +7,7 @@ import com.example.todo.service.TodoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,10 +27,7 @@ public class TodoController {
             @RequestBody @Valid SaveTodoRequestDto dto,
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
     ) {
-        if (loginMember == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        }
-
+        validateLogin(loginMember);
         return new ResponseEntity<>(todoService.save(loginMember.getId(), dto),HttpStatus.CREATED);
     }
 
@@ -38,9 +36,7 @@ public class TodoController {
             @PathVariable Long id,
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
     ) {
-        if (loginMember == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        }
+        validateLogin(loginMember);
 
         return new ResponseEntity<>(todoService.getTodoById(id), HttpStatus.OK);
     }
@@ -49,9 +45,7 @@ public class TodoController {
     public ResponseEntity<List<TodoResponseDto>> getTodos(
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
     ) {
-        if (loginMember == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        }
+        validateLogin(loginMember);
         return new ResponseEntity<>(todoService.getTodos(), HttpStatus.OK);
     }
 
@@ -61,9 +55,7 @@ public class TodoController {
             @RequestBody UpdateTodoRequestDto dto,
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
     ) {
-        if (loginMember == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        }
+        validateLogin(loginMember);
 
         return new ResponseEntity<>(todoService.updateTodo(id, dto, loginMember),HttpStatus.OK);
     }
@@ -73,10 +65,13 @@ public class TodoController {
             @PathVariable Long id,
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
     ) {
-        if (loginMember == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        }
+        validateLogin(loginMember);
         todoService.deleteTodo(id, loginMember);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    private void validateLogin(MemberResponseDto loginMember) {
+        if (loginMember == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
+        }
     }
 }

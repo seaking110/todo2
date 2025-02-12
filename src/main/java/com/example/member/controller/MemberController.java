@@ -10,8 +10,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
+
 
 @RestController
 public class MemberController {
@@ -21,18 +22,19 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<SaveMemberResponseDto> saveMember(@RequestBody @Valid SaveMemberRequestDto dto) {
+    public ResponseEntity<?> saveMember(
+            @RequestBody @Valid SaveMemberRequestDto dto
+    ) {
+
         return new ResponseEntity<>(memberService.save(dto), HttpStatus.CREATED);
     }
 
     @GetMapping("/members/{id}")
-    public ResponseEntity<MemberResponseDto> getMemberById(
+    public ResponseEntity<?> getMemberById(
             @PathVariable Long id,
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
     ) {
-        if (loginMember == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        validateLogin(loginMember);
         Member member = memberService.getMemberById(id);
 
         return new ResponseEntity<>(
@@ -49,9 +51,7 @@ public class MemberController {
     public ResponseEntity<List<MemberResponseDto>> getMembers(
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
     ) {
-        if (loginMember == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        validateLogin(loginMember);
         return new ResponseEntity<>(memberService.getMembers(),HttpStatus.OK);
     }
 
@@ -60,9 +60,7 @@ public class MemberController {
             @RequestBody @Valid UpdateMemberRequestDto dto,
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
     ) {
-        if (loginMember == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        validateLogin(loginMember);
         return new ResponseEntity<>(memberService.updateMember(loginMember.getId(), dto), HttpStatus.OK);
     }
 
@@ -71,9 +69,7 @@ public class MemberController {
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember,
             HttpServletRequest request
     ) {
-        if (loginMember == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        validateLogin(loginMember);
         memberService.deleteMember(loginMember.getId());
 
         return logout(request);
@@ -85,7 +81,6 @@ public class MemberController {
             HttpServletRequest request
     ) {
         LoginResponseDto responseDto = memberService.login(dto);
-
         HttpSession session = request.getSession();
         Member member = memberService.getMemberById(responseDto.getId());
         MemberResponseDto loginMember = new MemberResponseDto(
@@ -109,4 +104,11 @@ public class MemberController {
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
-    }}
+    }
+
+    private void validateLogin(MemberResponseDto loginMember) {
+        if (loginMember == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
+        }
+    }
+}
