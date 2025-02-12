@@ -37,12 +37,12 @@ public class MemberController {
 
         return new ResponseEntity<>(
                 new MemberResponseDto(
-                    member.getId(),
-                    member.getName(),
-                    member.getEmail(),
-                    member.getCreatedAt(),
-                    member.getModifiedAt()
-        ), HttpStatus.OK);
+                        member.getId(),
+                        member.getName(),
+                        member.getEmail(),
+                        member.getCreatedAt(),
+                        member.getModifiedAt()
+                ), HttpStatus.OK);
     }
 
     @GetMapping("/members")
