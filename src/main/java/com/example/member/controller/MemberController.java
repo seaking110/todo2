@@ -22,15 +22,12 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> saveMember(
-            @RequestBody @Valid SaveMemberRequestDto dto
-    ) {
-
+    public ResponseEntity<SaveMemberResponseDto> saveMember(@RequestBody @Valid SaveMemberRequestDto dto) {
         return new ResponseEntity<>(memberService.save(dto), HttpStatus.CREATED);
     }
 
     @GetMapping("/members/{id}")
-    public ResponseEntity<?> getMemberById(
+    public ResponseEntity<MemberResponseDto> getMemberById(
             @PathVariable Long id,
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
     ) {
