@@ -17,7 +17,7 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String content;
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "todo_id")
     private Todo todo;
 

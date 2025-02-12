@@ -4,6 +4,7 @@ import com.example.member.dto.*;
 import com.example.member.entity.Member;
 import com.example.member.repository.MemberRepository;
 import com.example.todo.config.PasswordEncoder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,16 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
+@RequiredArgsConstructor
 @Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder){
-        this.memberRepository = memberRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+
 
     public SaveMemberResponseDto save(SaveMemberRequestDto dto) {
         if (memberRepository.existsByEmail(dto.getEmail())) {
@@ -81,9 +80,16 @@ public class MemberService {
         if (!passwordEncoder.matches(dto.getOldPassword(), member.getPassword())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-        String encodedPassword = passwordEncoder.encode(dto.getNewPassword());
-        member.updateMember(dto.getName(), dto.getEmail(),encodedPassword);
-
+        if (dto.getName() != null && !dto.getName().isBlank()) {
+            member.updateName(dto.getName());
+        }
+        if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
+            member.updateEmail(dto.getEmail());
+        }
+        if (dto.getNewPassword() != null && !dto.getNewPassword().isBlank()) {
+            String encodedPassword = passwordEncoder.encode(dto.getNewPassword());
+            member.updatePassword(encodedPassword);
+        }
         return new UpdateMemberResponseDto(
                 member.getId(),
                 member.getName(),

@@ -9,6 +9,7 @@ import com.example.member.service.MemberService;
 import com.example.todo.entity.Todo;
 import com.example.todo.repository.TodoRepository;
 import com.example.todo.service.TodoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,18 +18,16 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+
 @Transactional
+@RequiredArgsConstructor
+@Service
 public class CommentService {
     private final TodoService todoService;
     private final MemberService memberService;
     private final CommentRepository commentRepository;
 
-    public CommentService(TodoService todoService, MemberService memberService, CommentRepository commentRepository) {
-        this.todoService = todoService;
-        this.memberService = memberService;
-        this.commentRepository = commentRepository;
-    }
+
 
     public SaveCommentResponseDto save(SaveCommentRequestDto dto, Long memberId, Long todoId) {
         Member member = memberService.getMemberById(memberId);

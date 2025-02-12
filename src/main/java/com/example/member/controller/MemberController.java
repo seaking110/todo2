@@ -7,6 +7,7 @@ import com.example.member.session.Const;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +16,12 @@ import java.util.List;
 
 
 @RestController
+@RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
 
     @PostMapping("/signup")
-    public ResponseEntity<SaveMemberResponseDto> saveMember(@RequestBody @Valid SaveMemberRequestDto dto) {
+    public ResponseEntity<SaveMemberResponseDto> createMember(@RequestBody @Valid SaveMemberRequestDto dto) {
         return new ResponseEntity<>(memberService.save(dto), HttpStatus.CREATED);
     }
 

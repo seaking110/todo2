@@ -1,9 +1,11 @@
-package com.example.comment.comtroller;
+package com.example.comment.controller;
 
 import com.example.comment.dto.*;
 import com.example.comment.service.CommentService;
 import com.example.member.dto.MemberResponseDto;
 import com.example.member.session.Const;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,16 +14,14 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping("/comments")
 public class ConmentController {
     private final CommentService commentService;
 
-    public ConmentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
-
-    @PostMapping("/{todoId}/comments")
-    public ResponseEntity<SaveCommentResponseDto> saveComment(
-            @RequestBody SaveCommentRequestDto dto,
+    @PostMapping("/{todoId}")
+    public ResponseEntity<SaveCommentResponseDto> createComment(
+            @RequestBody @Valid SaveCommentRequestDto dto,
             @PathVariable Long todoId,
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
     ) {
@@ -29,7 +29,7 @@ public class ConmentController {
         return new ResponseEntity<>(commentService.save(dto, loginMember.getId(), todoId), HttpStatus.CREATED);
     }
 
-    @GetMapping("/comments/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<CommentResponseDto> getCommentById(
             @PathVariable Long id,
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
@@ -38,7 +38,7 @@ public class ConmentController {
         return new ResponseEntity<>(commentService.getCommentById(id),HttpStatus.OK);
     }
 
-    @GetMapping("/comments")
+    @GetMapping
     public ResponseEntity<List<CommentResponseDto>> getComments(
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
     ) {
@@ -46,17 +46,17 @@ public class ConmentController {
         return new ResponseEntity<>(commentService.getComments(),HttpStatus.OK);
     }
 
-    @PatchMapping("/coments/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<UpdateCommentResponseDto> updateCommentById(
             @PathVariable Long id,
-            @RequestBody UpdateCommentRequestDto dto,
+            @RequestBody @Valid UpdateCommentRequestDto dto,
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
     ) {
         validateLogin(loginMember);
         return new ResponseEntity<>(commentService.updateCommentById(id, dto, loginMember.getId()),HttpStatus.OK);
     }
 
-    @DeleteMapping("/coments/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCommentById(
             @PathVariable Long id,
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember

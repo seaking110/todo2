@@ -35,16 +35,15 @@ public class Member extends BaseEntity {
         this.password = password;
     }
 
-    public void updateMember(String name, String email, String password) {
-        if (name != null && !name.isBlank()) {
-            this.name = name;
-        }
-        if (email != null && !email.isBlank()) {
-            this.email = email;
-        }
-        if (password != null && !password.isBlank()) {
-            this.password = password;
-        }
+    public void updateName(String name) {
+        this.name = name;
     }
 
+    public void updateEmail(String email) {
+        this.email = email;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }

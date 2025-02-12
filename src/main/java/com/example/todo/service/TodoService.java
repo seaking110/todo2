@@ -6,6 +6,11 @@ import com.example.member.service.MemberService;
 import com.example.todo.dto.*;
 import com.example.todo.entity.Todo;
 import com.example.todo.repository.TodoRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,15 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
+@RequiredArgsConstructor
 @Service
 public class TodoService {
     private final TodoRepository todoRepository;
     private final MemberService memberService;
 
-    public TodoService(TodoRepository todoRepository, MemberService memberService) {
-        this.todoRepository = todoRepository;
-        this.memberService = memberService;
-    }
 
     public SaveTodoResponseDto save(Long memberId, SaveTodoRequestDto dto) {
         Member member = memberService.getMemberById(memberId);
@@ -55,30 +57,23 @@ public class TodoService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
     @Transactional(readOnly = true)
-    public List<TodoResponseDto> getTodos() {
-       List<Todo> list = todoRepository.findAll();
-       List<TodoResponseDto> dtoList = new ArrayList<>();
-       for (Todo todo : list) {
-           Member member = todo.getMember();
-           MemberResponseDto memberDto = new MemberResponseDto(
-                   member.getId(),
-                   member.getName(),
-                   member.getEmail(),
-                   member.getCreatedAt(),
-                   member.getModifiedAt()
-           );
-           dtoList.add(
-                   new TodoResponseDto(
-                           todo.getId(),
-                           memberDto,
-                           todo.getTitle(),
-                           todo.getContent(),
-                           todo.getCreatedAt(),
-                           todo.getModifiedAt()
-                   )
-           );
-       }
-        return dtoList;
+    public Page<TodoResponseDto> getTodos(int page, int size) {
+       Pageable pageable = PageRequest.of(page-1, size, Sort.by(Sort.Order.desc("modifiedAt")));
+        return todoRepository.findAll(pageable)
+                .map(todo -> new TodoResponseDto(
+                        todo.getId(),
+                        new MemberResponseDto(
+                                todo.getMember().getId(),
+                                todo.getMember().getName(),
+                                todo.getMember().getEmail(),
+                                todo.getMember().getCreatedAt(),
+                                todo.getMember().getModifiedAt()
+                        ),
+                        todo.getTitle(),
+                        todo.getContent(),
+                        todo.getCreatedAt(),
+                        todo.getModifiedAt()
+                ));
     }
 
 
