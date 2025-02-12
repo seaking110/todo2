@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableJpaAuditing
-@SpringBootApplication(scanBasePackages = {"com.example.todo", "com.example.member"})
-@EntityScan(basePackages = { "com.example.todo.entity", "com.example.member.entity" })
-@EnableJpaRepositories(basePackages = {"com.example.todo.repository", "com.example.member.repository"})
+@SpringBootApplication(scanBasePackages = {"com.example.todo", "com.example.member", "com.example.comment"})
+@EntityScan(basePackages = { "com.example.todo.entity", "com.example.member.entity", "com.example.comment.entity" })
+@EnableJpaRepositories(basePackages = {"com.example.todo.repository", "com.example.member.repository", "com.example.comment.repository"})
 public class TodoApplication {
 
     public static void main(String[] args) {

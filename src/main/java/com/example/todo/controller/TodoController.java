@@ -1,8 +1,10 @@
 package com.example.todo.controller;
 
 import com.example.member.dto.MemberResponseDto;
+import com.example.member.entity.Member;
 import com.example.member.session.Const;
 import com.example.todo.dto.*;
+import com.example.todo.entity.Todo;
 import com.example.todo.service.TodoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -37,8 +39,23 @@ public class TodoController {
             @SessionAttribute(name = Const.LOGIN_MEMBER, required = false) MemberResponseDto loginMember
     ) {
         validateLogin(loginMember);
-
-        return new ResponseEntity<>(todoService.getTodoById(id), HttpStatus.OK);
+        Todo todo = todoService.getTodoById(id);
+        Member member = todo.getMember();
+        MemberResponseDto memberDto = new MemberResponseDto(
+                member.getId(),
+                member.getName(),
+                member.getEmail(),
+                member.getCreatedAt(),
+                member.getModifiedAt()
+        );
+        return new ResponseEntity<>(new TodoResponseDto(
+                todo.getId(),
+                memberDto,
+                todo.getTitle(),
+                todo.getContent(),
+                todo.getCreatedAt(),
+                todo.getModifiedAt()
+        ), HttpStatus.OK);
     }
 
     @GetMapping

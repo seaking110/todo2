@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class TodoService {
     private final TodoRepository todoRepository;
-    private MemberService memberService;
+    private final MemberService memberService;
 
     public TodoService(TodoRepository todoRepository, MemberService memberService) {
         this.todoRepository = todoRepository;
@@ -50,25 +50,9 @@ public class TodoService {
         );
     }
     @Transactional(readOnly = true)
-    public TodoResponseDto getTodoById(Long id) {
-        Todo todo = todoRepository.findById(id).orElseThrow(
+    public Todo getTodoById(Long id) {
+        return todoRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Member member = todo.getMember();
-        MemberResponseDto memberDto = new MemberResponseDto(
-                member.getId(),
-                member.getName(),
-                member.getEmail(),
-                member.getCreatedAt(),
-                member.getModifiedAt()
-        );
-        return new TodoResponseDto(
-                todo.getId(),
-                memberDto,
-                todo.getTitle(),
-                todo.getContent(),
-                todo.getCreatedAt(),
-                todo.getModifiedAt()
-        );
     }
     @Transactional(readOnly = true)
     public List<TodoResponseDto> getTodos() {
