@@ -97,7 +97,7 @@ CREATE TABLE comment (
 |------------|------------|--------------------|------------|------------|
 | 댓글 생성  | POST       | /comments     | content | 201 created, id, comment, todoId, memberId, createdAt, modifiedAt |
 | 댓글 단일 조회 | GET        | /comments/{todoId}| X       | 200 ok, id, comment, todoId, memberId, createdAt, modifiedAt |
-| 댓글 전체 조회 | GET        | /comments     | X       |  | 200 ok, List<id, comment, todoId, memberId, createdAt, modifiedAt> |
+| 댓글 전체 조회 | GET        | /comments     | X       | 200 ok, List<id, comment, todoId, memberId, createdAt, modifiedAt> |
 | 댓글 수정  | PATCH        | /comments/{todoId}| content    | 200 ok, id, comment, todoId, memberId, createdAt, modifiedAt |
 | 댓글 삭제  | DELETE     | /comments/{todoId}| X       | 200 ok |
 
