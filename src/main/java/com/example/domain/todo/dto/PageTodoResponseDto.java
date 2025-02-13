@@ -8,11 +8,16 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class PageTodoResponseDto {
-    private String title;
-    private String content;
-    private int commentCount;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
-    private String memberName;
 
+    private String title;
+
+    private String content;
+
+    private int commentCount;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime modifiedAt;
+
+    private String memberName;
 }

@@ -11,9 +11,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public FilterRegistrationBean loginFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new LoginFilter());
-        filterRegistrationBean.setOrder(1);
-        filterRegistrationBean.addUrlPatterns("/*");
+        filterRegistrationBean.setFilter(new LoginFilter()); // 로그인 필터 등록
+        filterRegistrationBean.setOrder(1);  // 우선순위 등록
+        filterRegistrationBean.addUrlPatterns("/*"); // 들어오는 모든 URL 검증
         return filterRegistrationBean;
     }
 }

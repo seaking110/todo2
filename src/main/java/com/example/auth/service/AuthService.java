@@ -12,13 +12,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+
 public class AuthService {
+
     private final MemberService memberService;
 
-
+    @Transactional(readOnly = true)
     public LoginResponseDto login(LoginRequestDto dto, HttpServletRequest request) {
         LoginResponseDto responseDto = memberService.login(dto);
         HttpSession session = request.getSession();
@@ -36,12 +39,12 @@ public class AuthService {
 
     public void logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        // 세션이 존재하면 -> 로그인이 된 경우
         if(session != null) {
-            session.invalidate(); // 해당 세션(데이터)을 삭제한다.
+            session.invalidate();
         }
     }
 
+    @Transactional
     public SaveMemberResponseDto save(SaveMemberRequestDto dto) {
         return memberService.save(dto);
     }

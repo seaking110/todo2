@@ -9,11 +9,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class LoginRequestDto {
+
     @Pattern(
             regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
             message = "올바른 이메일 형식을 입력하세요."
     )
     private final String email;
+
     @NotBlank(message = "비밀번호는 필수 입력값입니다.")
     @Pattern(
             regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,20}$",

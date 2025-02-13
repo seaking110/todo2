@@ -10,9 +10,12 @@ import java.time.LocalDateTime;
 public class SaveResponseDto {
 
     private Long id;
-    private String name;
-    private String email;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
 
+    private String name;
+
+    private String email;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime modifiedAt;
 }

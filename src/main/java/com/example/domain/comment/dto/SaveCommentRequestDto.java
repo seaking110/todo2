@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class SaveCommentRequestDto {
+
     @NotBlank
     @Size(min = 4, max = 40)
     private final String comment;

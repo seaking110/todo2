@@ -10,9 +10,14 @@ import java.time.LocalDateTime;
 public class SaveCommentResponseDto {
 
     private Long id;
+
     private String comment;
+
     private Long todoId;
+
     private Long memberId;
+
     private LocalDateTime createdAt;
+
     private LocalDateTime modifiedAt;
 }

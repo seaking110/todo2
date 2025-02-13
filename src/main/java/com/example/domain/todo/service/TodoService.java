@@ -20,9 +20,9 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 @Service
 public class TodoService {
+
     private final TodoRepository todoRepository;
     private final MemberService memberService;
-
 
     public SaveTodoResponseDto save(Long memberId, SaveTodoRequestDto dto) {
         Member member = memberService.getMemberById(memberId);
@@ -48,11 +48,14 @@ public class TodoService {
                 todo.getModifiedAt()
         );
     }
+
     @Transactional(readOnly = true)
     public Todo getTodoById(Long id) {
         return todoRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
+
+    // 페이징을 이용한 전체 일정 조회
     @Transactional(readOnly = true)
     public Page<PageTodoResponseDto> getTodos(int page, int size) {
        Pageable pageable = PageRequest.of(page-1, size, Sort.by(Sort.Order.desc("modifiedAt")));
@@ -67,28 +70,26 @@ public class TodoService {
                 ));
     }
 
-
     public UpdateTodoResponseDto updateTodo(Long id, UpdateTodoRequestDto dto, MemberResponseDto loginMember) {
         Todo todo = todoRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         Member member = todo.getMember();
+        // 댓글을 쓴 멤버와 현재 로그인한 멤버가 같은지 검증
         if(member.getId() != loginMember.getId()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
         todo.updateTodo(dto.getTitle(), dto.getContent());
 
-        MemberResponseDto memberDto = new MemberResponseDto(
-                member.getId(),
-                member.getName(),
-                member.getEmail(),
-                member.getCreatedAt(),
-                member.getModifiedAt()
-        );
-
         return new UpdateTodoResponseDto(
                 todo.getId(),
-                memberDto,
+                new MemberResponseDto(
+                        member.getId(),
+                        member.getName(),
+                        member.getEmail(),
+                        member.getCreatedAt(),
+                        member.getModifiedAt()
+                ),
                 todo.getTitle(),
                 todo.getContent(),
                 todo.getCreatedAt(),
@@ -99,7 +100,7 @@ public class TodoService {
     public void deleteTodo(Long id, MemberResponseDto loginMember) {
         Todo todo = todoRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
+        // 댓글을 쓴 멤버와 현재 로그인한 멤버가 같은지 검증
         if(todo.getMember().getId() != loginMember.getId()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }

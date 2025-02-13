@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class UpdateCommentRequestDto {
+
     @NotBlank
     @Size(min = 4, max = 40)
     private final String comment;

@@ -13,10 +13,13 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 public class Comment extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String content;
+
     @ManyToOne
     @JoinColumn(name = "todo_id")
     private Todo todo;
@@ -30,6 +33,7 @@ public class Comment extends BaseEntity {
         this.todo = todo;
         this.member = member;
     }
+
     public void setMember(Member member) {
         this.member = member;
     }

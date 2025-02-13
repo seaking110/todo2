@@ -9,10 +9,16 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class UpdateTodoResponseDto {
+
     private Long id;
+
     private MemberResponseDto memberResponseDto;
+
     private String title;
+
     private String content;
+
     private LocalDateTime createdAt;
+
     private LocalDateTime modifiedAt;
 }

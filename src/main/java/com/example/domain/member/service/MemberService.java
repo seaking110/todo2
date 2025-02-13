@@ -23,12 +23,12 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-
-
     public SaveMemberResponseDto save(SaveMemberRequestDto dto) {
+        // 이메일 중복 여부 체크
         if (memberRepository.existsByEmail(dto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 사용 중인 이메일입니다.");
         }
+        // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
         Member member = memberRepository.save(new Member(dto.getName(), dto.getEmail(), encodedPassword));
         return new SaveMemberResponseDto(
@@ -39,16 +39,18 @@ public class MemberService {
                 member.getModifiedAt()
         );
     }
+
     @Transactional(readOnly = true)
     public LoginResponseDto login(LoginRequestDto dto) {
         Member member = memberRepository.findByEmail(dto.getEmail()).orElseThrow(()->
                 new ResponseStatusException(HttpStatus.UNAUTHORIZED));
-
+        // 패스워드 검증
         if (!passwordEncoder.matches(dto.getPassword(), member.getPassword())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         return new LoginResponseDto(member.getId());
     }
+
     @Transactional(readOnly = true)
     public Member getMemberById(Long id) {
         return memberRepository.findById(id).orElseThrow(()->
@@ -73,7 +75,6 @@ public class MemberService {
         return dtoList;
     }
 
-
     public UpdateMemberResponseDto updateMember(Long id, UpdateMemberRequestDto dto) {
         // 멤버 조회
         Member member = memberRepository.findById(id).orElseThrow(() ->
@@ -82,6 +83,7 @@ public class MemberService {
         if (!passwordEncoder.matches(dto.getOldPassword(), member.getPassword())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
+
         if (dto.getName() != null && !dto.getName().isBlank()) {
             member.updateName(dto.getName());
         }
@@ -92,6 +94,7 @@ public class MemberService {
             String encodedPassword = passwordEncoder.encode(dto.getNewPassword());
             member.updatePassword(encodedPassword);
         }
+
         return new UpdateMemberResponseDto(
                 member.getId(),
                 member.getName(),
