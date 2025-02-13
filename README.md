@@ -5,12 +5,12 @@
 뷰는 제공되지 않으며, API 테스트는 Postman을 이용하여 확인해야 합니다.
 
 ---
-기술 스택:
+## 기술 스택
 
-Spring Boot
-JPA(Hibernate)
-MySQL
-Authentication: Session & Cookie 기반 인증
+- Spring Boot
+- JPA(Hibernate)
+- MySQL
+- Authentication: Session & Cookie 기반 인증
 
 ---
 
@@ -71,34 +71,33 @@ CREATE TABLE comment (
 ### 🏷️ 회원 관련 API
 | 기능       | HTTP Method | URL                | 요청 데이터 | 응답 데이터 |
 |------------|------------|--------------------|------------|------------|
-| 회원가입   | POST       | /api/members      | email, name, password | 성공 메시지 |
-| 로그인     | POST       | /api/login        | email, password | 세션 정보 |
-| 로그아웃   | POST       | /api/logout       | 없음       | 성공 메시지 |
+| 회원가입   | POST       | /auth/members      | name, email, password | 201 created, id, name, email, createdAt, modifiedAt |
+| 로그인     | POST       | /auth/login        | email, password | 200 ok, id |
+| 로그아웃   | GET       | /auth/logout       | X       | 200 ok |
 
 ### 🏷️ 멤버 관련 API
 | 기능       | HTTP Method | URL                | 요청 데이터 | 응답 데이터 |
 |------------|------------|--------------------|------------|------------|
-| 멤버 생성  | POST       | /api/members      | email, name, password | 생성된 멤버 |
-| 멤버 단일 조회 | GET        | /api/members/{id} | 없음       | 멤버 정보 |
-| 멤버 전체 조회 | GET        | /api/members      | 없음       | 멤버 리스트 |
-| 멤버 수정  | PUT        | /api/members/{id} | name, password | 수정된 멤버 정보 |
-| 멤버 삭제  | DELETE     | /api/members/{id} | 없음       | 성공 메시지 |
+| 멤버 단일 조회 | GET        | /members/{id} | X       | 200 ok, id, name, email, createdAt, modifiedAt |
+| 멤버 전체 조회 | GET        | /members      | X       | 200 ok, List<id, name, email, createdAt, modifiedAt> |
+| 멤버 수정  | PATCH        | /members | name, password | 200 ok, id, name, email, createdAt, modifiedAt |
+| 멤버 삭제  | DELETE     | /members | X       | 200 ok |
 
 ### 🏷️ 할일 관련 API
 | 기능       | HTTP Method | URL                | 요청 데이터 | 응답 데이터 |
 |------------|------------|--------------------|------------|------------|
-| 할일 생성  | POST       | /api/todos        | title, content, member_id | 생성된 할일 |
-| 할일 단일 조회 | GET        | /api/todos/{id}   | 없음       | 할일 정보 |
-| 할일 전체 조회 | GET        | /api/todos       | 없음       | 할일 리스트 |
-| 할일 수정  | PUT        | /api/todos/{id}   | title, content | 수정된 할일 |
-| 할일 삭제  | DELETE     | /api/todos/{id}   | 없음       | 성공 메시지 |
+| 할일 생성  | POST       | /todos        | title, content | 201 created, id, member 정보, title, content, createdAt, modifiedAt |
+| 할일 단일 조회 | GET        | /todos/{id}   | X       | 200 ok, id, member 정보, title, content, createdAt, modifiedAt |
+| 할일 전체 조회 | GET        | /todos?page=1&size=10      | X       | 200 ok, List<id, member 정보, title, content, createdAt, modifiedAt>  |
+| 할일 수정  | PATCH        | /todos/{id}   | title, content | 200 ok, id, member 정보, title, content, createdAt, modifiedAt |
+| 할일 삭제  | DELETE     | /todos/{id}   | X       | 200 ok |
 
 ### 🏷️ 댓글 관련 API
 | 기능       | HTTP Method | URL                | 요청 데이터 | 응답 데이터 |
 |------------|------------|--------------------|------------|------------|
-| 댓글 생성  | POST       | /api/comments     | content, member_id, todo_id | 생성된 댓글 |
-| 댓글 단일 조회 | GET        | /api/comments/{id}| 없음       | 댓글 정보 |
-| 댓글 전체 조회 | GET        | /api/comments     | 없음       | 댓글 리스트 |
-| 댓글 수정  | PUT        | /api/comments/{id}| content    | 수정된 댓글 |
-| 댓글 삭제  | DELETE     | /api/comments/{id}| 없음       | 성공 메시지 |
+| 댓글 생성  | POST       | /comments     | content | 201 created, id, comment, todoId, memberId, createdAt, modifiedAt |
+| 댓글 단일 조회 | GET        | /comments/{todoId}| X       | 200 ok, id, comment, todoId, memberId, createdAt, modifiedAt |
+| 댓글 전체 조회 | GET        | /comments     | X       | 200 ok, List<id, comment, todoId, memberId, createdAt, modifiedAt> |
+| 댓글 수정  | PATCH        | /comments/{todoId}| content    | 200 ok, id, comment, todoId, memberId, createdAt, modifiedAt |
+| 댓글 삭제  | DELETE     | /comments/{todoId}| X       | 200 ok |
 
