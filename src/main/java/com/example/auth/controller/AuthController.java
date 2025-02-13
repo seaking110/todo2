@@ -6,6 +6,7 @@ import com.example.auth.service.AuthService;
 import com.example.domain.member.dto.SaveMemberRequestDto;
 import com.example.domain.member.dto.SaveMemberResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,13 +32,17 @@ public class AuthController {
             @RequestBody @Valid LoginRequestDto dto,
             HttpServletRequest request
     ) {
+
         return new ResponseEntity<>(authService.login(dto, request),HttpStatus.OK);
     }
 
     //로그아웃
     @GetMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request) {
-        authService.logout(request);
+        HttpSession session = request.getSession(false);
+        if(session != null) {
+            session.invalidate();
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.domain.member.entity;
 
-import com.example.domain.todo.entity.BaseEntity;
+import com.example.global.entity.BaseEntity;
 import com.example.domain.todo.entity.Todo;
 import jakarta.persistence.*;
 import lombok.Getter;

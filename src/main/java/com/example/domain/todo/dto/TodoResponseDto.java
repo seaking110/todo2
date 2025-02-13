@@ -1,10 +1,12 @@
 package com.example.domain.todo.dto;
 
+import com.example.domain.comment.entity.Comment;
 import com.example.domain.member.dto.MemberResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -21,4 +23,6 @@ public class TodoResponseDto {
     private LocalDateTime createdAt;
 
     private LocalDateTime modifiedAt;
+
+    private List<Comment> commentsList;
 }

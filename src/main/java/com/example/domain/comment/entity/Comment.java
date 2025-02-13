@@ -1,7 +1,7 @@
 package com.example.domain.comment.entity;
 
 import com.example.domain.member.entity.Member;
-import com.example.domain.todo.entity.BaseEntity;
+import com.example.global.entity.BaseEntity;
 import com.example.domain.todo.entity.Todo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,11 +20,11 @@ public class Comment extends BaseEntity {
 
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "todo_id")
     private Todo todo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 

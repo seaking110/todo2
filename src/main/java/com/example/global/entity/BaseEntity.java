@@ -1,4 +1,4 @@
-package com.example.domain.todo.entity;
+package com.example.global.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

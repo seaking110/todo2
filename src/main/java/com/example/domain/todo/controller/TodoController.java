@@ -46,7 +46,8 @@ public class TodoController {
                 todo.getTitle(),
                 todo.getContent(),
                 todo.getCreatedAt(),
-                todo.getModifiedAt()
+                todo.getModifiedAt(),
+                todo.getComments()
         ), HttpStatus.OK);
     }
 

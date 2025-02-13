@@ -37,13 +37,6 @@ public class AuthService {
         return responseDto;
     }
 
-    public void logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if(session != null) {
-            session.invalidate();
-        }
-    }
-
     @Transactional
     public SaveMemberResponseDto save(SaveMemberRequestDto dto) {
         return memberService.save(dto);

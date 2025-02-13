@@ -6,6 +6,7 @@ import com.example.domain.member.entity.Member;
 import com.example.domain.member.service.MemberService;
 import com.example.global.util.Const;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -57,7 +58,10 @@ public class MemberController {
             HttpServletRequest request
     ) {
         memberService.deleteMember(loginMember.getId());
-        authService.logout(request);
+        HttpSession session = request.getSession(false);
+        if(session != null) {
+            session.invalidate();
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
