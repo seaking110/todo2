@@ -1,5 +1,7 @@
 package com.example.domain.todo.controller;
 
+import com.example.domain.comment.dto.CommentResponseDto;
+import com.example.domain.comment.entity.Comment;
 import com.example.domain.member.dto.MemberResponseDto;
 import com.example.domain.member.entity.Member;
 import com.example.global.util.Const;
@@ -12,6 +14,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,6 +45,19 @@ public class TodoController {
                 member.getCreatedAt(),
                 member.getModifiedAt()
         );
+        List<CommentResponseDto> commentDtoList = new ArrayList<>();
+        for (Comment comment : todo.getComments()){
+            commentDtoList.add(
+                new CommentResponseDto(
+                        comment.getId(),
+                        comment.getContent(),
+                        comment.getTodo().getId(),
+                        comment.getMember().getId(),
+                        comment.getCreatedAt(),
+                        comment.getModifiedAt()
+                )
+            );
+        }
         return new ResponseEntity<>(new TodoResponseDto(
                 todo.getId(),
                 memberDto,
@@ -47,7 +65,7 @@ public class TodoController {
                 todo.getContent(),
                 todo.getCreatedAt(),
                 todo.getModifiedAt(),
-                todo.getComments()
+                commentDtoList
         ), HttpStatus.OK);
     }
 

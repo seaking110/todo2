@@ -1,5 +1,6 @@
 package com.example.domain.todo.dto;
 
+import com.example.domain.comment.dto.CommentResponseDto;
 import com.example.domain.comment.entity.Comment;
 import com.example.domain.member.dto.MemberResponseDto;
 import lombok.AllArgsConstructor;
@@ -24,5 +25,5 @@ public class TodoResponseDto {
 
     private LocalDateTime modifiedAt;
 
-    private List<Comment> commentsList;
+    private List<CommentResponseDto> commentsList;
 }
